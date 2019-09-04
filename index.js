@@ -3,7 +3,7 @@ const SerialPort = require('serialport');
 const Readline = require('@serialport/parser-readline');
 const path = require('path');
 const date = require('date-and-time');
-const port = new SerialPort('/dev/ttyACM1', { baudRate: 9600 });
+const port = new SerialPort('/dev/ttyACM0', { baudRate: 9600 });
 const parser = port.pipe(new Readline({ delimiter: '\n' }));
 const { ModbusMaster, DATA_TYPES } = require('modbus-rtu');
 
@@ -17,10 +17,11 @@ const csvWriter = createCsvWriter({
 	header: [
 		{id: 'time', title: 'Time'},
 		{id: 'ist', title: 'IST Cap (pF)'},
-        {id: 'vaisala', title: 'Vaisala Cap(pF)'},
 		{id: 'ist2', title: 'New IST Cap (pF)'},
-        {id: 'hum', title: 'E+E Humidity'},
-		{id: 'open', title: 'Open (Reference) (pF)'}
+		{id: 'ist2h', title: 'New IST Heated Cap (pF)'},
+		{id: 'epe', title: 'E+E Cap (pF)'},
+		{id: 'hum', title: 'E+E Humidity'},
+		{id: 'vaisala', title: 'Vaisala Cap(pF)'}
 	]
 });
 
@@ -59,6 +60,7 @@ parser.on('data', data =>{
 		var ch2 = calcCap(data2) - n;
 		var ch3 = calcCap(data3) - n;
 
+		console.log('Raw Data ', data);
 		console.log('Ch0:', ch0, " pF");
 		console.log('Ch1:', ch1, " pF");
 		console.log('Ch2:', ch2, " pF");
@@ -70,10 +72,10 @@ parser.on('data', data =>{
 			let humid = data[1]/100;
 			let now = new Date();
 			let records = [
-				{time : date.format(now, 'HH:mm:ss'),  ist: ch0, vaisala: ch1, open: ch2, hum: humid}
+				{time : date.format(now, 'HH:mm:ss'),  ist: ch0, epe: ch1, ist2:ch2, ist2h: ch3, hum: humid}
 			];
 			csvWriter.writeRecords(records).then(() => {
-					console.log('...Done');
+					console.log('Done');
 				});
 		}, (err) => {
 			console.log('Error!!!');
