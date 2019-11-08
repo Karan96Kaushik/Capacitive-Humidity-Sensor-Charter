@@ -28,8 +28,6 @@ SerialPort.list().then((data) => {
 
 			var selectedPort = AllPorts[parseInt(chunk)];
 			console.log('Selected : ', selectedPort)
-			console.log("Select FDC port");
-
 
 			//console.log(typeof serialPort);
 
@@ -38,8 +36,6 @@ SerialPort.list().then((data) => {
 			}
 		}
 	});
-
-	console.log("Select Modbus port");
 
 })
 
