@@ -31,11 +31,12 @@ var ehum;
 var vtemp; 
 var etemp; 
 var stemp; 
+var shum;
 var sraw;
 
 var ee_addr = '/dev/ttyUSB0';
-var vais_addr = '/dev/ttyUSB2';
-var sgs_addr = '/dev/ttyUSB1';
+var vais_addr = '/dev/ttyUSB1';
+var sgs_addr = '/dev/ttyUSB2';
 
 ModPort = new SerialPort(ee_addr, {  // E+E
 	baudRate: 19200,
@@ -90,9 +91,11 @@ parserS.on('data', datas => {
 		//console.log('S raw:',parseInt(datas))
 	} else {
 		var Str = datas.split('%');
+		var StrRaw = datas.split('C');
 
 		shum = parseFloat(Str[0]);
 		stemp = parseFloat(Str[1]);
+		sraw = parseInt(StrRaw[1]);
 		//console.log('S:',hum,temp )
 
 	}
@@ -110,6 +113,7 @@ parserV.on('data', datas => {
 setInterval(function modbussE() {
 	master.readHoldingRegisters(247, 38, 4).then((data) => {
 		//console.log('E:', data[3] / 100, data[1] / 100);
+		now = new Date();
 		let records = [
 			{
 				time : date.format(now, 'HH:mm:ss'),

@@ -18,6 +18,8 @@ if (args[0] > 50000) {
 }
 
 //console.log( mapImin(   56835       ,/*55920*/ 0    ,57280  ,0  ,98 ,66 ) )
-console.log( mapImin(   61120       ,/*55920*/ 0    ,64678  ,0  ,98 ,47 ) )
+console.log( mapImin(   56526       ,/*55920*/ 0    ,57236  ,0  ,98 ,43 ) )
+console.log( mapImin(   56526       ,/*55920*/ 0    ,57236  ,0  ,98 ,43 ) )
 
-console.log(    map1(   args[0]     ,55920          ,57280  ,0  ,98 ) )
+console.log(    map1(   args[0]     ,56228          ,57194  ,11  ,98 ) )
+console.log(    map1(   args[0]     ,55971          ,57236  ,0  ,98 ) )
