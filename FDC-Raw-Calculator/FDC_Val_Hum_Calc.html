@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Out Max</td>
+                <td><input id="out_max" type="number"></td>
+            </tr>
+            <tr>
+                <td>Out Min</td>
+                <td><input id="out_min" type="number"></td>
+            </tr>
+            <tr>
+                <td>In Max</td>
+                <td><input id="in_max" type="number"></td>
+            </tr>
+            <tr>
+                <td>In Min</td>
+                <td><input id="in_min" type="number"></td>
+            </tr>
+            <tr>
+                <td>DAC Raw</td>
+                <td><input id="x" type="number"></td>
+            </tr>
+            <tr>
+                <td>Humidity</td>
+                <td><input id="hum" type="number"></td>
+            </tr>
+            <tr>
+                <td><button onclick="calculate()">Calc</button></td>
+                <td><button onclick="calculateImin()">Calc Imin</button></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+<script src="calculate.js"></script>
+
+</html>
