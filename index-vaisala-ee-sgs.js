@@ -37,9 +37,12 @@ var vhum;
 var ehum; 
 var vtemp; 
 var etemp; 
+var stemp2; 
 var stemp; 
+var shum2;
 var shum;
 var sraw;
+var sraw2;
 var scalc;
 var scalc2;
 
@@ -97,14 +100,14 @@ function testModbus(addr) {
 		var test_modbus = fork('test_modbus.js',[addr]);
 	
 		test_modbus.on('message', (data) => {
-		//console.log(`stdout: >${data}<`);
-		if (data == 'Success') {
-			resolve();
-			return true;
-		} else if (data == 'Error') {
-			reject();
-			return false;
-		}
+			//console.log(`stdout: >${data}<`);
+			if (data == 'Success') {
+				resolve();
+				return true;
+			} else if (data == 'Error') {
+				reject();
+				return false;
+			}
 		});
 
 		test_modbus.on('exit', (data) => {
@@ -115,7 +118,7 @@ function testModbus(addr) {
 }
 
 function startLogging() {
-	console.log('Starting')
+	//console.log('Starting')
 	ModPort = new SerialPort(ee_addr, {  // E+E
 		baudRate: 19200,
 		parity: "even"
@@ -178,6 +181,7 @@ function startLogging() {
 	///////////////////////////////////////////////////////////////////////
 
 	parserS.on('data', datas => {
+		process.stdout.write("!");
 
 		if (parseInt(datas) > 40000) {
 			sraw = parseInt(datas);
@@ -198,6 +202,7 @@ function startLogging() {
 
 	parserS2.on('data', datas => {
 
+		process.stdout.write("@");
 		if (parseInt(datas) > 40000) {
 			sraw2 = parseInt(datas);
 			//console.log('S raw:',parseInt(datas))
@@ -208,7 +213,7 @@ function startLogging() {
 			shum2 = parseFloat(Str[0]);
 			stemp2 = parseFloat(Str[1]);
 			sraw2 = parseInt(StrRaw[1]);
-			scalc2 = Math.round(map(sraw2,57024,60757,0,100)*100)/100
+			scalc2 = Math.round(map(sraw2,57024,60757,0,98)*100)/100
 			//console.log('S:',hum,temp )
 
 		}
@@ -218,6 +223,8 @@ function startLogging() {
 	parserV.on('data', datas => {
 		//var Str = datas.split('%RH');
 		//vhum = parseFloat(Str[0].split('RH= ')[1]);
+		process.stdout.write("#");
+
 		vhum = parseFloat(datas.split('RH= ')[1]);
 		vtemp = parseFloat(datas.split('T= ')[1]);
 		//console.log('V:',hum,temp )
@@ -266,6 +273,7 @@ function startLogging() {
 					sraw: sraw,
 					vtemp: vtemp,
 					vhum: vhum,
+					scalc:scalc,
 					scalc2:scalc2,
 				}
 			];

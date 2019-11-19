@@ -11,7 +11,7 @@ serialPort = new SerialPort(args[0], {
 	parity: "even"
 }, function (err) {
 	if (err) {
-		process.send('Ser Error');
+		process.send('Error');
 		//process.exit();
 		serialPort = undefined;
 	}
@@ -29,12 +29,12 @@ setInterval(function modbuss() {
 		process.send('Success');
 		process.exit();
 	}, (err) => {
-		process.send('Read Error');
+		process.send('Error');
 		process.exit();
 	});
 }, 1500);
 
 serialPort.on("close", () => {
-	console.log("SP Closed");
+	//console.log("SP Closed");
 	process.exit();
 })
