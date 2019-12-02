@@ -12,7 +12,7 @@ const map = require('./support/map')
 let now = new Date();
 logname = date.format(now, 'DD-MM-YYYY[-]HH:mm'); //Name for csv Log File
 
-console.log(logname, path.join(__dirname + `/ProbeCompLogs/Log-${logname}.csv`));
+//console.log(logname, path.join(__dirname + `/ProbeCompLogs/Log-${logname}.csv`));
 
 const csvWriter = createCsvWriter({
 	path: path.join(__dirname + `/ProbeCompLogs/Log-${logname}.csv`),
@@ -60,7 +60,7 @@ SerialPort.list().then((data) => {
 		if (typeof el.manufacturer != 'undefined') {
 			console.log(el.manufacturer, el.comName)
 
-			if(el.manufacturer == 'Prolific Technology Inc.') {
+			if(el.manufacturer.trim() == 'Prolific Technology Inc.') {
 				sgs_addr = el.comName;
 			} else if (el.manufacturer == 'Moxa Technologies Co., Ltd.') {
 				sgs2_addr = el.comName;
@@ -118,7 +118,14 @@ function testModbus(addr) {
 }
 
 function startLogging() {
-	//console.log('Starting')
+	console.log('')
+	console.log('---Starting---')
+	console.log('SGS :', sgs_addr)
+	console.log('SGS 2 :', sgs2_addr)
+	console.log('E+E :', ee_addr)
+	console.log('Vaisala :', vais_addr)
+	console.log('')
+
 	ModPort = new SerialPort(ee_addr, {  // E+E
 		baudRate: 19200,
 		parity: "even"

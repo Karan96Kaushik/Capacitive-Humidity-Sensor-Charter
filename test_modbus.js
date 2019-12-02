@@ -24,7 +24,7 @@ master = new ModbusMaster(serialPort, {
 
 setInterval(function modbuss() {
 	master.readHoldingRegisters(247, 38, 4).then((data) => {
-		//console.log(data[1] / 100 + " C	     " + data[3] / 100 + " %");
+		console.log(data[1] / 100 + " C	     " + data[3] / 100 + " %");
 		
 		process.send('Success');
 		process.exit();
