@@ -15,7 +15,7 @@ logname = date.format(now, 'DD-MM-YYYY[-]HH:mm'); //Name for csv Log File
 //console.log(logname, path.join(__dirname + `/ProbeCompLogs/Log-${logname}.csv`));
 
 const csvWriter = createCsvWriter({
-	path: path.join(__dirname + `/ProbeCompLogs/Log-${logname}.csv`),
+	path: path.join(__dirname + `/Dec_ProbeLogs/Log-${logname}.csv`),
 	header: [
 		{id: 'time', title: 'Time'},
 		{id: 'ehum', title: 'E+E Hum'},
@@ -25,11 +25,11 @@ const csvWriter = createCsvWriter({
 		{id: 'shum', title: 'SGS Hum'},
 		{id: 'stemp', title: 'SGS Temp'},
 		{id: 'sraw', title: 'SGS RAW'},
-		{id: 'scalc', title: 'SGS Calc'},
-		{id: 'shum2', title: 'SGS 2 Hum'},
-		{id: 'stemp2', title: 'SGS 2 Temp'},
-		{id: 'sraw2', title: 'SGS 2 RAW'},
-		{id: 'scalc2', title: 'SGS 2 Calc'},
+		//{id: 'scalc', title: 'SGS Calc'},
+		{id: 'shum2', title: 'SGS 2 RevC Hum'},
+		{id: 'stemp2', title: 'SGS 2 RevC Temp'},
+		{id: 'sraw2', title: 'SGS 2 RevC RAW'},
+		//{id: 'scalc2', title: 'SGS 2 Calc'},
 	]
 });
 
@@ -46,13 +46,14 @@ var sraw2;
 var scalc;
 var scalc2;
 
-var ee_addr = '/dev/ttyUSB0';
-var vais_addr = '/dev/ttyUSB1';
-var sgs_addr;
-var sgs2_addr;
+var ee_addr =   '/dev/ttyUSB0';
+var vais_addr = '/dev/ttyUSB3';
+var sgs_addr =  '/dev/ttyUSB1';
+var sgs2_addr = '/dev/ttyUSB2';
 
 var Ports485 = [];
 
+if(false)
 SerialPort.list().then((data) => {
 	//console.log(data)
 
@@ -92,6 +93,8 @@ SerialPort.list().then((data) => {
 
 
 })
+else
+	startLogging();
 
 function testModbus(addr) {
 	return new Promise(function (resolve, reject) {
