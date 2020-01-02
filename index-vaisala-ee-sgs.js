@@ -1,5 +1,10 @@
 // E+E 071 Modbus Humidity Sensor
 
+var ee_addr = '/dev/ttyUSB3';
+var vais_addr = '/dev/ttyUSB1';
+var sgs_addr = '/dev/ttyUSB0';
+var sgs2_addr = '/dev/ttyUSB2'; // rev C
+
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;	// CSV Logging
 const SerialPort = require('serialport');
 const Readline = require('@serialport/parser-readline');
@@ -17,28 +22,28 @@ logname = date.format(now, 'DD-MM-YYYY[-]HH:mm'); //Name for csv Log File
 const csvWriter = createCsvWriter({
 	path: path.join(__dirname + `/Dec_ProbeLogs/Log-${logname}.csv`),
 	header: [
-		{id: 'time', title: 'Time'},
-		{id: 'ehum', title: 'E+E Hum'},
-		{id: 'etemp', title: 'E+E Temp'},
-		{id: 'vhum', title: 'Vaisala Hum'},
-		{id: 'vtemp', title: 'Vaisala Temp'},
-		{id: 'shum', title: 'SGS Hum'},
-		{id: 'stemp', title: 'SGS Temp'},
-		{id: 'sraw', title: 'SGS RAW'},
+		{ id: 'time', title: 'Time' },
+		{ id: 'ehum', title: 'E+E Hum' },
+		{ id: 'etemp', title: 'E+E Temp' },
+		{ id: 'vhum', title: 'Vaisala Hum' },
+		{ id: 'vtemp', title: 'Vaisala Temp' },
+		{ id: 'shum', title: 'SGS Hum' },
+		{ id: 'stemp', title: 'SGS Temp' },
+		{ id: 'sraw', title: 'SGS RAW' },
 		//{id: 'scalc', title: 'SGS Calc'},
-		{id: 'shum2', title: 'SGS 2 RevC Hum'},
-		{id: 'stemp2', title: 'SGS 2 RevC Temp'},
-		{id: 'sraw2', title: 'SGS 2 RevC RAW'},
+		{ id: 'shum2', title: 'SGS 2 RevC Hum' },
+		{ id: 'stemp2', title: 'SGS 2 RevC Temp' },
+		{ id: 'sraw2', title: 'SGS 2 RevC RAW' },
 		//{id: 'scalc2', title: 'SGS 2 Calc'},
 	]
 });
 
-var vhum; 
-var ehum; 
-var vtemp; 
-var etemp; 
-var stemp2; 
-var stemp; 
+var vhum;
+var ehum;
+var vtemp;
+var etemp;
+var stemp2;
+var stemp;
 var shum2;
 var shum;
 var sraw;
@@ -46,53 +51,48 @@ var sraw2;
 var scalc;
 var scalc2;
 
-var ee_addr =   '/dev/ttyUSB0';
-var vais_addr = '/dev/ttyUSB3';
-var sgs_addr =  '/dev/ttyUSB1';
-var sgs2_addr = '/dev/ttyUSB2';
-
 var Ports485 = [];
 
-if(false)
-SerialPort.list().then((data) => {
-	//console.log(data)
+if (false)
+	SerialPort.list().then((data) => {
+		//console.log(data)
 
-	data.map((el)=>{
-		if (typeof el.manufacturer != 'undefined') {
-			console.log(el.manufacturer, el.comName)
+		data.map((el) => {
+			if (typeof el.manufacturer != 'undefined') {
+				console.log(el.manufacturer, el.comName)
 
-			if(el.manufacturer.trim() == 'Prolific Technology Inc.') {
-				sgs_addr = el.comName;
-			} else if (el.manufacturer == 'Moxa Technologies Co., Ltd.') {
-				sgs2_addr = el.comName;
-			} else if (el.manufacturer == "1a86") {
-				Ports485.push(el.comName)
-				//console.log(Ports485);
-				if (Ports485.length == 2) {
-					//console.log(testModbus(Ports485[0]))
-					testModbus(Ports485[0]).then(()=>{
-						//console.log('This')
-						ee_addr = Ports485[0];
-						vais_addr = Ports485[1];
-						startLogging();
-					},(e)=> {
-						testModbus(Ports485[1]).then(()=>{
-							//console.log('This2')
-							ee_addr = Ports485[1];
-							vais_addr = Ports485[0];
+				if (el.manufacturer.trim() == 'Prolific Technology Inc.') {
+					sgs_addr = el.comName;
+				} else if (el.manufacturer == 'Moxa Technologies Co., Ltd.') {
+					sgs2_addr = el.comName;
+				} else if (el.manufacturer == "1a86") {
+					Ports485.push(el.comName)
+					//console.log(Ports485);
+					if (Ports485.length == 2) {
+						//console.log(testModbus(Ports485[0]))
+						testModbus(Ports485[0]).then(() => {
+							//console.log('This')
+							ee_addr = Ports485[0];
+							vais_addr = Ports485[1];
 							startLogging();
+						}, (e) => {
+							testModbus(Ports485[1]).then(() => {
+								//console.log('This2')
+								ee_addr = Ports485[1];
+								vais_addr = Ports485[0];
+								startLogging();
+							})
 						})
-					})
+					}
 				}
+				//sgs_addr = el.comName;
 			}
-			//sgs_addr = el.comName;
-		}
+		})
+
+		//console.log(sgs_addr)
+
+
 	})
-
-	//console.log(sgs_addr)
-
-
-})
 else
 	startLogging();
 
@@ -100,8 +100,8 @@ function testModbus(addr) {
 	return new Promise(function (resolve, reject) {
 		//console.log('Testing ',addr)
 
-		var test_modbus = fork('test_modbus.js',[addr]);
-	
+		var test_modbus = fork('test_modbus.js', [addr]);
+
 		test_modbus.on('message', (data) => {
 			//console.log(`stdout: >${data}<`);
 			if (data == 'Success') {
@@ -115,8 +115,8 @@ function testModbus(addr) {
 
 		test_modbus.on('exit', (data) => {
 			//console.log(`Exit: >${data}<`);
-			
-			});
+
+		});
 	});
 }
 
@@ -180,7 +180,7 @@ function startLogging() {
 	});
 
 	SerPortS2.on("open", () => {
-		console.log('SGS Serial port open');
+		console.log('SGS 2 Serial port open');
 	});
 
 	SerPortV.on("open", () => {
@@ -203,7 +203,7 @@ function startLogging() {
 			shum = parseFloat(Str[0]);
 			stemp = parseFloat(Str[1]);
 			sraw = parseInt(StrRaw[1]);
-			scalc = Math.round(map(sraw,55430,57173,0,98)*100)/100
+			scalc = Math.round(map(sraw, 55430, 57173, 0, 98) * 100) / 100
 			//console.log('S:',hum,temp )
 
 		}
@@ -213,7 +213,7 @@ function startLogging() {
 	parserS2.on('data', datas => {
 
 		process.stdout.write("@");
-		if (parseInt(datas) > 40000) {
+		if (parseInt(datas) > 30000) {
 			sraw2 = parseInt(datas);
 			//console.log('S raw:',parseInt(datas))
 		} else {
@@ -223,7 +223,7 @@ function startLogging() {
 			shum2 = parseFloat(Str[0]);
 			stemp2 = parseFloat(Str[1]);
 			sraw2 = parseInt(StrRaw[1]);
-			scalc2 = Math.round(map(sraw2,57024,60757,0,98)*100)/100
+			scalc2 = Math.round(map(sraw2, 57024, 60757, 0, 98) * 100) / 100
 			//console.log('S:',hum,temp )
 
 		}
@@ -241,13 +241,13 @@ function startLogging() {
 	})
 
 	setInterval(function modbussE() {
-		
+
 		master.readHoldingRegisters(247, 38, 4).then((data) => {
 			//console.log('E:', data[3] / 100, data[1] / 100);
 			now = new Date();
 			let records = [
 				{
-					time : date.format(now, 'HH:mm:ss'),
+					time: date.format(now, 'HH:mm:ss'),
 					ehum: data[3] / 100,
 					etemp: data[1] / 100,
 					stemp: stemp,
@@ -258,21 +258,21 @@ function startLogging() {
 					sraw: sraw,
 					vtemp: vtemp,
 					vhum: vhum,
-					scalc:scalc,
-					scalc2:scalc2,
+					scalc: scalc,
+					scalc2: scalc2,
 				}
 			];
 
 			csvWriter.writeRecords(records).then(() => {
-					//console.log('Done');
-				});
-				
+				//console.log('Done');
+			});
+
 
 		}, (err) => {
 			now = new Date();
 			let records = [
 				{
-					time : date.format(now, 'HH:mm:ss'),
+					time: date.format(now, 'HH:mm:ss'),
 					//ehum: data[3] / 100,
 					//etemp: data[1] / 100,
 					stemp: stemp,
@@ -283,8 +283,8 @@ function startLogging() {
 					sraw: sraw,
 					vtemp: vtemp,
 					vhum: vhum,
-					scalc:scalc,
-					scalc2:scalc2,
+					scalc: scalc,
+					scalc2: scalc2,
 				}
 			];
 			csvWriter.writeRecords(records).then(() => {
@@ -296,6 +296,41 @@ function startLogging() {
 
 	}, 1000);
 
+	setInterval(function modE() {
+
+		//master.readHoldingRegisters(247, 38, 4).then((data) => {
+		//console.log('E:', data[3] / 100, data[1] / 100);
+		now = new Date();
+		etemp = 0;
+		ehum = 0;
+
+		let records = [
+			{
+				time: date.format(now, 'HH:mm:ss'),
+				ehum: ehum,
+				etemp: etemp,
+				stemp: stemp,
+				shum: shum,
+				sraw2: sraw2,
+				stemp2: stemp2,
+				shum2: shum2,
+				sraw: sraw,
+				vtemp: vtemp,
+				vhum: vhum,
+				scalc: scalc,
+				scalc2: scalc2,
+			}
+		];
+
+		csvWriter.writeRecords(records).then(() => {
+			//console.log('Done');
+		});
+
+
+
+		//});
+
+	}, 1000);
 
 	setInterval(function modbuss() {
 
