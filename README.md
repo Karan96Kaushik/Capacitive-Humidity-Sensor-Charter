@@ -18,6 +18,10 @@
 
 ## Files & Folders
 
+1. **FDC-Raw-Calculator/** : Calculate FDC Limit Values Calculator Web App
+    1. **FDC_Val_Hum_Calc.html** : Web App HTML
+    1. **calculate.js** : calc function used in FDC_Val html
+1. **FDC_Humidity_Charter.ino** : Arduino Sketch for reading cap from FDC2214
 1. **index-vaisala-ee-sgs.js** : Script for SGS, E+E and Vaisala (Latest)
 1. **Humidity_Curve_Fitting.ipynb** : Jupyter Notebook for creating linear model from data
 1. **Humidity_Modeling_(Udemy_Course).ipynb** : Jupyter Notebook for humidity data analytics
