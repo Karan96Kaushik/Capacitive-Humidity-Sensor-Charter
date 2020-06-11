@@ -18,7 +18,7 @@ logname = date.format(now, 'DD-MM-YYYY[-]HH:mm'); //Name for csv Log File
 //console.log(logname, path.join(__dirname + `/ProbeCompLogs/Log-${logname}.csv`));
 
 const csvWriter = createCsvWriter({
-	path: path.join(__dirname + `/SGS_Vais/Log-${logname}.csv`),
+	path: path.join(__dirname + `/SGS_Vais_June/Log-${logname}.csv`),
 	header: [
 		{ id: 'time', title: 'Time' },
 		{ id: 'vhum', title: 'Vaisala Hum' },

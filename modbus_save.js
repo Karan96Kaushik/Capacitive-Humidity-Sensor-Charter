@@ -1,7 +1,7 @@
 const { ModbusMaster, DATA_TYPES } = require('modbus-rtu');
 const SerialPort = require('serialport');
 
-var portComm = '/dev/ttyUSB0';
+var portComm = '/dev/ttyUSB1';
 
 serialPort = new SerialPort(portComm, {
     baudRate: 9600,
@@ -18,6 +18,14 @@ master = new ModbusMaster(serialPort, {
     responseTimeout: 1000
 });
 
+if (false)
+master.writeSingleRegister(1, 7, 102).then(() => {
+    console.log("Done")
+ }, (err) => {
+    console.log(err)
+});
+
+if(true)
 
 master.writeSingleRegister(1, 2, 1).then(() => {
     console.log("Done")
