@@ -1,0 +1,7 @@
+*RST
+:SENS:FUNC "VOLT",(@Front)
+:SENS:VOLT:RANG 10, (@Front)
+:SENS:VOLT:NPLC 0.1, (@Front)
+:ROUT:SCAN:CRE (@Front)
+INIT
+*WAI

@@ -18,6 +18,10 @@
 
 ## Files & Folders
 
+1. **rm_sgs_vaisala.js** : Script for RM Young and Vaisala (Vaisala: RS485, RMY: Multimeter SCPI, SGS: RS232-ASCII)
+1. **rm_vaisala.js** : Script for RM Young and Vaisala (Vaisala: RS485, RMY: Multimeter SCPI)
+1. **sgs_vaisala.js** : Script for SGS and Vaisala (Vaisala: RS485, SGS: RS232-ASCII)
+1. **SCPI_DAQ6510_Single_Front_Channel.py** : Script for SCPI communication to DAQ6510 (For RMY Sensor) 
 1. **FDC-Raw-Calculator/** : Calculate FDC Limit Values Calculator Web App
     1. **FDC_Val_Hum_Calc.html** : Web App HTML
     1. **calculate.js** : calc function used in FDC_Val html
